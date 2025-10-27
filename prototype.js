@@ -45,7 +45,7 @@ export class Prototype {
                         }]
                     });
                 }
-            } else for await (const _ of setInterval(60000)) await this.updateStatus(`🤖 · ${Object.keys(this.config.versions)[Object.keys(this.config.versions).length - 1]}`, process.uptime());
+            } else for await (const _ of setInterval(60000)) await this.updateStatus(`🦉 · v${Object.keys(this.config.versions)[Object.keys(this.config.versions).length - 1]}`, process.uptime());
         });
         this.discordClient.on('messageCreate', async (message) => {
             if (message.mentions.has(this.discordClient.user) && message.content.includes('about')) {
