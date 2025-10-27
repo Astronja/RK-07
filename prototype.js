@@ -103,7 +103,7 @@ export class Prototype {
                     },
                     description: 'Description of the prototype.',
                     thumbnail: {
-                        url: (await this.discordClient.users.fetch('1023608069063717035')).displayAvatarURL({ format: 'png', dynamic: true })
+                        url: "https://arknights.wiki.gg/images/Silence_icon.png?d37ac6"
                     },
                     fields: [
                         {
