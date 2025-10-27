@@ -1,4 +1,2 @@
-# RK-prototypes-template
-A nodejs discord bot template.
-
-Last updated: 10-07-25
+# RK-07
+Archive bot fetching resource from closure.wiki and Arknights terra wiki

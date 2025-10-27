@@ -1,8 +1,8 @@
 import os from "os";
 import { setInterval } from "timers/promises";
 import { GatewayIntentBits, Client, ActivityType } from "discord.js";
-import { Command } from "./Prototype/command.js";
-import { PRTS } from "./Prototype/prts.js";
+import { Command } from "./Silence/command.js";
+import { PRTS } from "./Silence/prts.js";
 
 export class Prototype {
     constructor(config, dctoken) {
