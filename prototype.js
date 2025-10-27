@@ -87,6 +87,9 @@ export class Prototype {
         const latestVersion = Object.keys(versionList)[Object.keys(versionList).length - 1];
         const attributions = [
             'Art components - Arknights《明日方舟》',
+            'Closure Wiki - closure.wiki',
+            'Terra Wiki - arknights.wiki.gg',
+            'Wafarin Wiki - warfarin.wiki',
             'discord.js v14'
         ];
         return {
