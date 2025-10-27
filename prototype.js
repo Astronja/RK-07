@@ -13,7 +13,7 @@ export class Prototype {
         this.posthouse = config.posthouse;
         this.debugchannel = config.debugchannel;
         this.config = config;
-        this.color = 0x000000;
+        this.color = 0x82826a;
         this.discordClient = new Client({
             intents: [
                 GatewayIntentBits.Guilds,
