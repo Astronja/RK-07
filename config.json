@@ -6,6 +6,7 @@
     "debugchannel": "1307931811325939722",
     "guild": "1164712655857135686",
     "versions": {
-        "0.1": "Project initialization."
+        "0.1": "Project initialization.",
+        "0.2": "Update command"
     }
 }
