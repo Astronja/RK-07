@@ -1,4 +1,3 @@
-import os from "os";
 import { setInterval } from "timers/promises";
 import { GatewayIntentBits, Client, ActivityType } from "discord.js";
 import { Command } from "./Silence/command.js";
@@ -34,18 +33,16 @@ export class Prototype {
         await this.discordClient.login(this.discordToken);
         this.discordClient.once('clientReady', async (c) => {
             this.log(`Logged in as ${c.user.tag}`);
+            const guild = this.discordClient.guilds.cache.get(this.config.guild);
+            await guild.commands.set(Command.registerCommand());
             if (c.user.username.includes("Ada")) {
-                if (this.name.includes("Prototype") || this.name.includes("Ada")) {
-                    for await (const _ of setInterval(60000)) await this.updateStatus(`👾 · Server Uptime`, os.uptime());
-                } else {
-                    this.discordClient.user.setPresence({
-                        activities: [{ 
-                            name: `🤓 · Testing as ${this.name}`, 
-                            type: ActivityType.Custom
-                        }]
-                    });
-                }
-            } else for await (const _ of setInterval(60000)) await this.updateStatus(`🦉 · v${Object.keys(this.config.versions)[Object.keys(this.config.versions).length - 1]}`, process.uptime());
+                this.discordClient.user.setPresence({
+                    activities: [{ 
+                        name: `🤓 · Testing as ${this.name}`, 
+                        type: ActivityType.Custom
+                    }]
+                });
+            } else for await (const _ of setInterval(60000)) await this.updateStatus();
         });
         this.discordClient.on('messageCreate', async (message) => {
             if (message.mentions.has(this.discordClient.user) && message.content.includes('about')) {
@@ -67,13 +64,22 @@ export class Prototype {
                 } else await message.reply("Please send PRTS messages to <#1408285577958391922>.");
             }
         });
+        this.discordClient.on('interactionCreate', async (interaction) => {
+            if (interaction.isCommand()) {
+                await interaction.deferReply();
+                const request = new Command();
+                request.slashCommandHandler(interaction);
+            }
+        });
     }
 
-    async updateStatus (key, uptime) {
+    async updateStatus () {
+        const latestVersion = Object.keys(this.config.versions)[Object.keys(this.config.versions).length - 1];
+        const uptime = process.uptime();
         const days = Math.floor(uptime / 86400);
         const hours = Math.floor((uptime % 86400) / 3600);
         const minutes = Math.floor((uptime % 3600) / 60);
-        const statusString = `${key}: ${days}d ${hours}h ${minutes}m`;
+        const statusString = `🦉 · v${latestVersion}: ${days}d ${hours}h ${minutes}m`;
         this.discordClient.user.setPresence({
             activities: [{ 
                 name: statusString,
