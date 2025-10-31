@@ -21,6 +21,18 @@ export class Case {
         console.log(Object.keys(JSON.parse(data)));
     }
 
+    async compareExisting () {
+        const json = await source.readCase("RangeID_Case", ".json");
+        const existing = Object.keys(range);
+        let list = [];
+        for (let id in JSON.parse(json)) {
+            if (!existing.includes(id)) {
+                list.push(id);
+            }
+        }
+        console.log(list);
+    }
+
     async search (name) {
         const data = await source.readOperatorData(name);
         this.pushRangeId(name, data);
@@ -56,7 +68,7 @@ export class Case {
 
 async function start () {
     const caseCommand = new Case();
-    await caseCommand.read();
+    await caseCommand.compareExisting();
 }
 
 start();
