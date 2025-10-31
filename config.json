@@ -7,6 +7,7 @@
     "guild": "1164712655857135686",
     "versions": {
         "0.1": "Project initialization.",
-        "0.2": "Update command"
+        "0.2": "Update command is added for establishing the library.",
+        "0.3": "Added case.js for further data analysis."
     }
 }

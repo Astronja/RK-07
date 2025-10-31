@@ -42,16 +42,31 @@ export class Update {
         return list;
     }
 
+    async updateLogs (message) {
+        if (this.ephemeral) {
+            await this.interaction.editReply(message);
+        } else {
+            await this.logmessage.edit(message);
+        }
+    }
+
     async updateProcess (interaction) {
         try {
             const startTime = Date.now();
             const elapse = `Elapse: <t:${Math.floor(startTime / 1000)}:R>\n`;
-            await interaction.editReply({
+            let list = await this.getTasks();
+            if (list.length > 20) {
+                this.ephemeral = false;
+                await interaction.editReply("Processing a large number of items, creating a new message for logs...");
+                this.logmessage = await interaction.channel.send("``New logs session.``");
+            } else {
+                this.ephemeral = true;
+            }
+            await this.updateLogs({
                 content: elapse,
                 files: [await this.formatLog("Execution started.")]
             });
-            let list = await this.getTasks();
-            let success = '';
+            let success = 0;
             for (var i = 0; i < list.length; i++) {
                 await delay(35000);
                 const log = `(${i + 1}) ${await this.toIssue(list[i])}`;
@@ -60,29 +75,26 @@ export class Update {
                 const percentage = `${Math.round((i + 1)/list.length*10000)/100}%`;
                 const barLength = 40;
                 const bar = "``[" + "#".repeat(Math.round((i + 1)/list.length*barLength)) + ".".repeat(barLength - Math.round((i + 1)/list.length*barLength)) + "]``";
-                await interaction.editReply({
+                await this.updateLogs({
                     content: elapse + progress + "\n" + percentage + "\n" + bar,
                     files: [await this.formatLog(log)]
                 });
             }
             const endTime = Date.now();
             await delay(5000);
-            await interaction.editReply({ files: [await this.formatLog(`(${success}/${list.length}) item(s) successfully issued.`)] });
-            await interaction.editReply({ files: [await this.formatLog(`Execution completed, process time: ${this.formatTimespanString(startTime, endTime)}`)] });
-            await source.unlinkUpdateLog();
+            await this.updateLogs({ files: [await this.formatLog(`(${success}/${list.length}) item(s) successfully issued.`)] });
+            await this.updateLogs({ files: [await this.formatLog(`Execution completed, process time: ${this.formatTimespanString(startTime, endTime)}`)] });
         } catch (error) {
             console.error(error);
-            await interaction.editReply({ files: [await this.formatLog("Execution failed. (Code: -1 Unexpected error)")] });
-            await source.unlinkUpdateLog();
+            await this.updateLogs({ files: [await this.formatLog("Execution failed. (Code: -1 Unexpected error)")] });
         }
+        await source.unlinkUpdateLog();
     }
 
     async toIssue (task) {
         try {
-            console.log(task);
             if (task.platform == "alldata") {
                 const closureResponse = await this.handleClosureTask(task.pagename);
-                await delay(5000);
                 const wikiResponse = await this.handleWikiTask(task.pagename);
                 return closureResponse + "\n" + wikiResponse;
             } else if (task.platform == "gamedata") {
