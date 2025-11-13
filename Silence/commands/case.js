@@ -1,7 +1,34 @@
 import source from '../source.js';
 import { GetWiki } from '../imports/getwiki.js';
 
-export class Case {
+/**
+ * This is to get operator ids
+ * @deprecated 2025-11-13
+ * @attention Although deprecated, this does not mean this code piece could not work intentionally.
+ */
+export class GetOpIds {
+    constructor (interaction) {
+        this.interaction = interaction;
+    }
+
+    async execute () {
+        const fileList = await source.readOperatorDataDir();
+        let object = {};
+        for (let item of fileList) {
+            const file = await source.readOperatorData(item);
+            object[file.summary.name] = file.summary.id;
+        }
+        await source.writeCase(object);
+    }
+}
+
+
+/**
+ * This is to get the rangeids of operators
+ * @deprecated 2025-11-13
+ * @attention Although deprecated, this does not mean this code piece could not work intentionally.
+ */
+export class GetRangeIds {
     constructor (interaction) {
         this.interaction = interaction;
         this.results = {};
@@ -68,7 +95,7 @@ export class Case {
 
 async function start () {
     const caseCommand = new Case();
-    await caseCommand.compareExisting();
+    await caseCommand.execute();
 }
 
-start();
+//start();

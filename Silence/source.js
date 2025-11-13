@@ -24,13 +24,30 @@ export default class source {
     }
 
     static async readOperatorData (name) {
-        return JSON.parse(await fs.readFile(__dirname + "operators/closure/" + name.replaceAll(" ", "_") + ".json", 'utf8'));
+        return JSON.parse(await fs.readFile(__dirname + "operators/closure/" + name.replaceAll(" ", "_").replaceAll(".json", "") + ".json", 'utf8'));
     }
 
     static async readOperatorWikitext (name) {
         return await fs.readFile(__dirname + "operators/wiki/" + name.replaceAll(" ", "_") + ".txt", 'utf8');
     }
 
+    static async readOperatorDataDir () {
+        return await fs.readdir(__dirname + "operators/closure");
+    }
+
+    static async readOperatorWikitextDir () {
+        return await fs.readdir(__dirname + "operators/wikitext");
+    }
+
+    // The following fs-using methods serves for the GetOpIds class, check commands/case.js.
+    /*
+    static async writeCase (data) {
+        await fs.writeFile(__dirname + "cases/ids.json", JSON.stringify(data, null, 2), 'utf8');
+    }
+    */
+
+    // The following fs-using methods serves for the GetRangeIds class, check commands/case.js.
+    /*
     static async writeCase (name, value, suffix) {
         const caseDataPath = __dirname + "cases/" + name.replaceAll(" ", "_") + suffix;
         await fs.writeFile(caseDataPath, value, 'utf8');
@@ -55,6 +72,7 @@ export default class source {
             await fs.unlink(caseDataPath);
         }
     }
+    */
 }
 
 async function start () {
